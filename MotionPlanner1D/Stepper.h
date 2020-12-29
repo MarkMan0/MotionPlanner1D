@@ -11,6 +11,7 @@ public:
     void set_enabled(bool ena = true);
     bool is_enabled() const;
     double get_position() const;
+    double get_mm_per_step() const;
     std::int64_t get_steps() const;
 
 private:

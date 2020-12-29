@@ -35,6 +35,10 @@ double Stepper::get_position() const {
     return mm_per_step_ * steps_;
 }
 
+double Stepper::get_mm_per_step() const {
+    return mm_per_step_;
+}
+
 std::int64_t Stepper::get_steps() const {
     return steps_;
 }

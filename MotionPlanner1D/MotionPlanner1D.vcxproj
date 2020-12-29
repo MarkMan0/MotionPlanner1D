@@ -139,11 +139,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="MotionPlanner.h" />
     <ClInclude Include="Stepper.h" />
     <ClInclude Include="Timer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MotionPlanner.cpp" />
     <ClCompile Include="Stepper.cpp" />
     <ClCompile Include="Timer.cpp" />
   </ItemGroup>

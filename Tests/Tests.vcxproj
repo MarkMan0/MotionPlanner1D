@@ -156,6 +156,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="MotionPlannerTests.cpp" />
     <ClCompile Include="StepperTests.cpp" />
     <ClCompile Include="TimerTests.cpp" />
   </ItemGroup>
