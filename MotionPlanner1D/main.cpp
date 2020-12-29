@@ -28,7 +28,7 @@ int main() {
 
     Stepper stepper(1.0/100.0);
     stepper.set_enabled();
-    mp::MotionPlanner planner(timer, stepper);
+    mp::MotionPlanner planner(timer, stepper, dt);
     planner_ptr = &planner;
 
     timer.set_callback(call_isr);

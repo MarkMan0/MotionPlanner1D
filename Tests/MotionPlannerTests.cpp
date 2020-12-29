@@ -19,70 +19,56 @@ namespace MotionPlannerTests {
     }
 
     TEST_CLASS(MotionPlannerTests) {
-        TEST_METHOD(TestConstantSpeed) {
-            const double dt = 1.0/2e6;  //assumed period for ticks
+public:
+    const double dt{1.0/2e6};
+    Timer timer;
+    Stepper stepper;
+    mp::MotionPlanner planner;
+    mp::Block block;
 
-            Timer timer;
-            timer.setPrescale(0);
+    MotionPlannerTests() : stepper(1.0/100.0), planner(timer, stepper, dt) { }
 
-            Stepper stepper(1.0/100.0);
-            stepper.set_enabled();
-            mp::MotionPlanner planner(timer, stepper);
-            planner_ptr = &planner;
+    TEST_METHOD_INITIALIZE(init) {
+        timer.setPrescale(0);
+        planner_ptr = &planner;
+        timer.set_callback(call_isr);
+        stepper.set_enabled();
+        timer.reset();
+        timer.setThreshold(0);
+    }
 
-            timer.set_callback(call_isr);
+    void run_planner() {
+        double last_pos = stepper.get_position();
+        unsigned long long tick_cnt{0}, last_cnt{0};
+        while (!planner.is_ready()) {
+            timer.tick();
+            ++tick_cnt;
 
-            mp::Block block;
-            block.target_position = 100;    //[mm]
-            block.speed = 50;               //[mm/s]
-
-            planner.set_block(block);
-            unsigned long long tick_cnt = 0, last_cnt = 0;
-            timer.setThreshold(0);
-
-            double last_pos = stepper.get_position();
-
-            while (!planner.is_ready()) {
-                timer.tick();
-                ++tick_cnt;
-
-                const auto pos = stepper.get_position();
-                if (pos != last_pos) {
-                    if (tick_cnt > 2) { // ignore first step, speed will be wrong
-                        double speed = (pos - last_pos) / ((tick_cnt - last_cnt) * dt);
-                        Assert::AreEqual(block.speed, speed, 1e-6, L"Speed not as expected");
-                    }
-                    last_pos = pos;
-                    last_cnt = tick_cnt;
+            const auto pos = stepper.get_position();
+            if (pos != last_pos) {
+                if (tick_cnt > 2) { // ignore first step, speed will be wrong
+                    double speed = (pos - last_pos) / ((tick_cnt - last_cnt) * dt);
+                    Assert::AreEqual(block.speed, speed, 1e-6, L"Speed not as expected");
                 }
+                last_pos = pos;
+                last_cnt = tick_cnt;
             }
-            Assert::AreEqual(block.target_position, stepper.get_position(), L"Stepper position not correct");
-
-            stepper.set_steps(0);
-            block.target_position = 123;
-            block.speed = 32;
-
-            last_pos = stepper.get_position();
-            tick_cnt = 0, last_cnt = 0;
-            timer.reset();
-            timer.setThreshold(0);
-            planner.set_block(block);
-
-            while (!planner.is_ready()) {
-                timer.tick();
-                ++tick_cnt;
-
-                const auto pos = stepper.get_position();
-                if (pos != last_pos) {
-                    if (tick_cnt > 2) { // ignore first step, speed will be wrong
-                        double speed = (pos - last_pos) / ((tick_cnt - last_cnt) * dt);
-                        Assert::AreEqual(block.speed, speed, 1e-6, L"Speed not as expected");
-                    }
-                    last_pos = pos;
-                    last_cnt = tick_cnt;
-                }
-            }
-            Assert::AreEqual(block.target_position, stepper.get_position(), L"Stepper position not correct");
         }
+        Assert::AreEqual(block.target_position, stepper.get_position(), L"Stepper position not correct");
+    }
+
+    TEST_METHOD(TestConstantSpeed1) {
+        block.target_position = 100;    //[mm]
+        block.speed = 50;               //[mm/s]
+        planner.set_block(block);
+        run_planner();
+    }
+
+    TEST_METHOD(TestConstantSpeed2) {
+        block.target_position = 132;
+        block.speed = 32;
+        planner.set_block(block);
+        run_planner();
+    }
     };
 }

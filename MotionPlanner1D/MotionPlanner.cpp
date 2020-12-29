@@ -2,7 +2,8 @@
 
 
 //assume 2Mhz timer clock
-mp::MotionPlanner::MotionPlanner(Timer &timer, Stepper &stepper) : mm_per_step_(stepper.get_mm_per_step()), stepper_(stepper), s_per_tick_(1.0/2e6), timer_(timer) {
+mp::MotionPlanner::MotionPlanner(Timer &timer, Stepper &stepper, double s_per_tick) : mm_per_step_(stepper.get_mm_per_step()),
+stepper_(stepper), s_per_tick_(s_per_tick), timer_(timer) {
 }
 
 void mp::MotionPlanner::set_block(const mp::Block &block) {

@@ -14,7 +14,7 @@ namespace mp {
     class MotionPlanner {
 
     public:
-        MotionPlanner(Timer &, Stepper &);
+        MotionPlanner(Timer &, Stepper &, double s_per_tick);
         void set_block(const Block &block);
         void isr();
         bool is_ready() const;
