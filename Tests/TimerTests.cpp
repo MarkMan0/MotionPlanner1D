@@ -19,7 +19,7 @@ namespace MotionPlannerTests {
             val = 0;
             Timer timer(incVal);
 
-            timer.setPrescale(2);
+            timer.setPrescale(1);
             timer.setThreshold(5);
 
             timer.tick();
@@ -41,6 +41,21 @@ namespace MotionPlannerTests {
             Assert::AreEqual(static_cast<Timer::counter_t>(0), timer.getCounter(), L"Counter does not match expected");
         }
 
+        TEST_METHOD(TestZeroPsc) {
+            val = 0;
+            Timer timer(incVal);
+
+            timer.setPrescale(0);
+            timer.setThreshold(5);
+            timer.tick();
+            timer.tick();
+            timer.tick();
+            timer.tick();
+            Assert::AreEqual(0, val, L"val not 0");
+            timer.tick();
+            Assert::AreEqual(1, val, L"val not 0");
+        }
+
         TEST_METHOD(TestDifferentPSC_TH) {
             val = 0;
             Timer timer(incVal);
@@ -49,7 +64,7 @@ namespace MotionPlannerTests {
             timer.setPrescale(psc);
             timer.setThreshold(th);
 
-            for (int i = 0; i < th * psc - 1; ++i) {
+            for (int i = 0; i < (th) * (psc+1) - 1; ++i) {
                 timer.tick();
             }
             Assert::AreEqual(0, val, L"val not 0");

@@ -10,7 +10,7 @@ Timer::Timer(callback_t cb) : callback_(cb) { }
 
 void Timer::tick() {
     ++prescale_cnt_;
-    if (prescale_cnt_ >= prescale_val_) {
+    if (prescale_cnt_ > prescale_val_) {
         prev_counter_ = counter_;
         ++counter_;
         prescale_cnt_ = 0;
