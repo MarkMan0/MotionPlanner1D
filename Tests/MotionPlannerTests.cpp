@@ -66,6 +66,32 @@ namespace MotionPlannerTests {
                 }
             }
             Assert::AreEqual(block.target_position, stepper.get_position(), L"Stepper position not correct");
+
+            stepper.set_steps(0);
+            block.target_position = 123;
+            block.speed = 32;
+
+            last_pos = stepper.get_position();
+            tick_cnt = 0, last_cnt = 0;
+            timer.reset();
+            timer.setThreshold(0);
+            planner.set_block(block);
+
+            while (!planner.is_ready()) {
+                timer.tick();
+                ++tick_cnt;
+
+                const auto pos = stepper.get_position();
+                if (pos != last_pos) {
+                    if (tick_cnt > 2) { // ignore first step, speed will be wrong
+                        double speed = (pos - last_pos) / ((tick_cnt - last_cnt) * dt);
+                        Assert::IsTrue(compare_doubles(block.speed, speed, 1e-6), L"Speed not as expected");
+                    }
+                    last_pos = pos;
+                    last_cnt = tick_cnt;
+                }
+            }
+            Assert::AreEqual(block.target_position, stepper.get_position(), L"Stepper position not correct");
         }
     };
 }
