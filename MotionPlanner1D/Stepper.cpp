@@ -42,3 +42,7 @@ double Stepper::get_mm_per_step() const {
 std::int64_t Stepper::get_steps() const {
     return steps_;
 }
+
+void Stepper::set_steps(std::int64_t steps) {
+    steps_ = steps;
+}

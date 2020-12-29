@@ -13,6 +13,7 @@ public:
     double get_position() const;
     double get_mm_per_step() const;
     std::int64_t get_steps() const;
+    void set_steps(std::int64_t);
 
 private:
     double mm_per_step_{0};
