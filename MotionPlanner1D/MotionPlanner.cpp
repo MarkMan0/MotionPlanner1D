@@ -33,8 +33,7 @@ void mp::MotionPlanner::set_block(const mp::Block &block) {
 
     accel_until_ = s_middle + s_accel;
     decel_after_ = s_accel;
-    t_now_ = 2/block_.acceleration;
-    t_now_ = std::sqrt(mm_per_step_ / block_.acceleration);
+    t_now_ = std::sqrt(2*mm_per_step_ / block_.acceleration);
     current_speed_ = 0;
 }
 
