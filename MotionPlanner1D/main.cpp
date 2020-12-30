@@ -34,9 +34,9 @@ int main(int argc, char **argv) {
     timer.set_callback(call_isr);
 
     mp::Block block;
-    block.target_position = 80;    //[mm]
+    block.target_position = 200;    //[mm]
     block.speed = 80;               //[mm/s]
-    block.acceleration = 500;       //[mm/s/s]
+    block.acceleration = 100;       //[mm/s/s]
 
     planner.set_block(block);
     unsigned long long tick_cnt = 0;
