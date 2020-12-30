@@ -19,7 +19,7 @@ void call_isr() {
     }
 }
 
-int main() {
+int main(int argc, char **argv) {
 
     const double dt = 1.0/2e6;  //assumed period for ticks
 
@@ -36,7 +36,7 @@ int main() {
     mp::Block block;
     block.target_position = 80;    //[mm]
     block.speed = 80;               //[mm/s]
-    block.acceleration = 0;       //[mm/s/s]
+    block.acceleration = 500;       //[mm/s/s]
 
     planner.set_block(block);
     unsigned long long tick_cnt = 0;
@@ -52,7 +52,7 @@ int main() {
         ++tick_cnt;
         const auto pos = stepper.get_position();
         if (pos != last_pos) {
-            out_file << dt * tick_cnt << ", " << pos << "\n";
+            out_file << dt * tick_cnt << ", " << pos << ", " << planner.current_speed_ << "\n";
             last_pos = pos;
         }
     }

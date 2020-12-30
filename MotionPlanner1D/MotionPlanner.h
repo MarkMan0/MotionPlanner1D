@@ -4,6 +4,8 @@
 #include "Timer.h"
 #include <stdint.h>
 
+int main(int, char **);
+
 namespace mp {
 
     struct Block {
@@ -13,6 +15,8 @@ namespace mp {
     };
 
     class MotionPlanner {
+
+        friend int ::main(int argc, char **argv);
 
     public:
         MotionPlanner(Timer &, Stepper &, double s_per_tick);
