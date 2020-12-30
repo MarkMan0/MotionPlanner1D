@@ -9,6 +9,7 @@ namespace mp {
     struct Block {
         double speed{0};
         double target_position{0};
+        double acceleration{0};
     };
 
     class MotionPlanner {
@@ -27,6 +28,9 @@ namespace mp {
         bool ready_{true};
         const double s_per_tick_{ };
         Timer &timer_;
+        double current_speed_{0};
+        std::int64_t accel_until_{0}, decel_after_{0};
+        double t_now_{0};
     };
 }
 
